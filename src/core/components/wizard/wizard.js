@@ -8,8 +8,8 @@ export default function Wizard(props){
             This is the wizard
             {
                 props.steps[props.curStep]({
-                    wizardContext: props.WizardContext,
-                    onAction: props.onAction
+                    onAction: props.onAction,
+                    state: props.state
                 })
             }
         </div>
@@ -19,6 +19,6 @@ export default function Wizard(props){
 Wizard.propTypes = {
     header: PropTypes.func.isRequired,
     steps: PropTypes.array.isRequired,
-    wizardContext: PropTypes.object.isRequired,
+    state: PropTypes.object.isRequired,
     onComplete: PropTypes.func.isRequired
 };
