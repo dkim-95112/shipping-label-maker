@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Wizard(){
+export default function Wizard(){
     return (
       <div className={"Wizard"}>
-
+        This is the wizard
       </div>
     );
 }
