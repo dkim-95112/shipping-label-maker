@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 export default function Wizard(props){
     return (
       <div className={"Wizard"}>
-          <h2>{props.header}</h2>
-        This is the wizard
+          <h2>{props.header()}</h2>
+          This is the wizard
+          {props.steps[props.curStep]()}
       </div>
     );
 }
