@@ -21,10 +21,16 @@ const WizardAction = {
     setToName: 4,
     setToStreet: 5,
     setToCity: 6,
+    setToState: 7,
+    setToZip: 8,
     setFromName: 10,
     setFromStreet: 11,
     setFromCity: 12,
+    setFromState: 13,
+    setFromZip: 14,
     setWeight: 20,
+    setGround:21,
+    setPriority:22,
 };
 export default class ShippingLabelMaker extends React.Component {
     constructor(props) {
@@ -45,7 +51,10 @@ export default class ShippingLabelMaker extends React.Component {
                 zip: "10038"
             },
             weight: 2,
-            shippingOption: 1
+            shippingOption: {
+                ground:1,
+                priority:2
+            }
         }
         this.handleAction = this.handleAction.bind(this);
     }
@@ -69,7 +78,7 @@ export default class ShippingLabelMaker extends React.Component {
                 break;
             case WizardAction.next:
                 this.setState({
-                    curStep: Math.min(2, this.state.curStep + 1)
+                    curStep: Math.min(4, this.state.curStep + 1)
                 })
                 break;
             case WizardAction.setFromName:
@@ -90,6 +99,20 @@ export default class ShippingLabelMaker extends React.Component {
                 this.setState({
                     from: {
                         city: value
+                    }
+                })
+                break;
+            case WizardAction.setFromState:
+                this.setState({
+                    from: {
+                        state: value
+                    }
+                })
+                break;
+            case WizardAction.setFromZip:
+                this.setState({
+                    from: {
+                        zip: value
                     }
                 })
                 break;
@@ -114,11 +137,40 @@ export default class ShippingLabelMaker extends React.Component {
                     }
                 })
                 break;
+            case WizardAction.setToState:
+                this.setState({
+                    from: {
+                        state: value
+                    }
+                })
+                break;
+            case WizardAction.setToZip:
+                this.setState({
+                    from: {
+                        zip: value
+                    }
+                })
+                break;
             case WizardAction.setWeight:
                 this.setState({
                     weight: value
                 })
                 break;
+            case WizardAction.setGround:
+                this.setState({
+                    shippingOption:{
+                        ground: value
+                    }
+                })
+                break;
+            case WizardAction.setPriority:
+                this.setState({
+                    shippingOption:{
+                        priority: value
+                    }
+                })
+                break;
+            default: break;
         }
     }
 
@@ -129,7 +181,7 @@ export default class ShippingLabelMaker extends React.Component {
                 <div>progress bar - curStep: {this.state.curStep}</div>
                 <Wizard
                     header={this.header}
-                    steps={[Step1, Step2, Step3]}
+                    steps={[Step1, Step2, Step3, Step4, Step5]}
                     curStep={this.state.curStep}
                     onAction={this.handleAction}
                     onComplete={this.handleComplete}
@@ -156,7 +208,42 @@ function Step1(props) {
                     })}
                 />
             </label>
-
+            <label>Street:
+                <input
+                    value={state.from.street}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setFromStreet,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>City:
+                <input
+                    value={state.from.city}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setFromCity,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>State:
+                <input
+                    value={state.from.state}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setFromState,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>Zip:
+                <input
+                    value={state.from.zip}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setFromZip,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
             <div>
                 <button
                     onClick={() => props.onAction({
@@ -195,7 +282,42 @@ function Step2(props) {
                 })}
             />
             </label>
-
+            <label>Street:
+                <input
+                    value={props.state.to.street}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setToStreet,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>City:
+                <input
+                    value={props.state.to.city}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setToCity,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>State:
+                <input
+                    value={props.state.to.state}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setToState,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
+            <label>Zip:
+                <input
+                    value={props.state.to.zip}
+                    onChange={(ev) => props.onAction({
+                        type: WizardAction.setToZip,
+                        value: ev.target.value
+                    })}
+                />
+            </label>
             <div>
                 <button
                     onClick={() => props.onAction({
@@ -233,6 +355,94 @@ function Step3(props) {
                     value: ev.target.value
                 })}/>
             </label>
+            <div>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.prev
+                    })}
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.next
+                    })}
+                >
+                    Next
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function Step4(props) {
+    return (
+        <div>
+            <h2>Get Shipping Option:</h2>
+            <label>
+                Ground: <input
+                value={props.state.shippingOption.ground}
+                onChange={(ev) => props.onAction({
+                    type: WizardAction.setGround,
+                    value: ev.target.value
+                })}/>
+            </label>
+            <label>
+                Priority: <input
+                value={props.state.shippingOption.priority}
+                onChange={(ev) => props.onAction({
+                    type: WizardAction.setPriority,
+                    value: ev.target.value
+                })}/>
+            </label>
+            <div>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.prev
+                    })}
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.next
+                    })}
+                >
+                    Next
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function Step5(props) {
+    console.log(props.state);
+    return (
+        <div>
+            <h2>Complete:</h2>
+            {props.state.from.name}
+            <label>
+                Ground: 
+            </label>
+            <label>
+                Priority: 
+            </label>
+            <div>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.prev
+                    })}
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => props.onAction({
+                        type: WizardAction.next
+                    })}
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 }
